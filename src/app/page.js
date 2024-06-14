@@ -4,6 +4,7 @@
 
 'use client';
 import Link from "next/link";
+import Image from "next/image"
 import {
   Navbar,
   NavbarBrand,
@@ -22,27 +23,19 @@ import {
 import CustomCard from './components/Card'
 import { useEffect, useState} from "react";
 export default function Home() {
-const tokenUrl = ''
-const apiUrl = ''
+
   const [items, setItems] = useState([]);
-  useEffect(() =>{
-    const getToken = async () => {
-    const clientId = process.env.TDX_CLIENT_ID;
-    const clientSecret = process.env.TDX_ClIENT_SECRET;
+  useEffect(() =>
+  {
+    async function fetchData()
+    {
+      const response = await fetch('api/items');
+      const data = await response.json();
+      console.log(data);
 
-    const tokenParams = new URLSearchParams();
-    tokenParams.append('grant_type', 'client_credentials');
-    tokenParams.append('client_id', clientId);
-    tokenParams.append('clientSecret', clientSecret);
-
-    const tokenResponse = await fetch('https://tdx.transportdata.tw/auth/realms/TDXConnect/protocol/openid-connect/token', {
-      method: 'POST',
-      headers: {
-        'content-type' : 'application/x-twww-form-urlencoded'
-      },
-      body: tokenParams.toString()
-    });
+      setItems(data.apiData);
     }
+    fetchData();
   }, [])
   return (
     <>
@@ -50,7 +43,7 @@ const apiUrl = ''
         <div className="container mx-auto">
           <Navbar fluid className="bg-cyan-800">
             <NavbarBrand as={Link} href="/">
-              <img src="https://www.yuntech.edu.tw/images/website_png/Group_640.png" className="mr-3 h-6 sm:h-9" alt="Flowbite React Logo" />
+              <Image loader={() => ("https://www.yuntech.edu.tw/images/website_png/Group_640.png")} src={"https://www.yuntech.edu.tw/images/website_png/Group_640.png"} width={500} height={500}/>
               <span className="self-center whitespace-nowrap text-xl font-semibold text-white">Yuntech traverling</span>
             </NavbarBrand>
             <NavbarToggle />
@@ -87,46 +80,19 @@ const apiUrl = ''
       </div>
       <div className="h-56 sm:h-64 xl:h-80 2xl:h-96">
         <Carousel>
-          <img src="/banner/rainbowEye.jpg" alt="彩虹眼 由 蔡佩書拍攝" />
-          <img src="/banner/yuntech.jpg" alt="由 Zhuang kuonan - 自己的作品, CC BY-SA 4.0, https://commons.wikimedia.org/w/index.php?curid=65669091"/>
-          <img src="/banner/green.jpg" alt="..." />
-          <img src="/banner/mountain.jpg" alt="..." />
-          <img src="/banner/station.jpg" alt="..." />
+          <Image loader={() => "/banner/rainbowEye.jpg"} src={"/banner/rainbowEye.jpg"} width={500} height={500}/>
+          <Image loader={() => ("/banner/yuntech.jpg")} src={"https://www.yuntech.edu.tw/images/website_png/Group_640.png"} width={500} height={500}/>
+          <Image loader={() => ("/banner/green.jpg")} src={"/banner/green.jpg"} width={500} height={500}/>
+          <Image loader={() => ("/banner/mountain.jpg")} src={"/banner/mountain.jpg"} width={500} height={500}/>
+          <Image loader={() => ("/banner/station.jpg")} src={"/banner/station.jpg"} width={500} height={500}/>
         </Carousel>
       </div>
 
-      <div className="bg-white py-16">
-        <div className="container mx-auto grid grid-cols-4 gap-4">
-          { items.map(item =>
-          <Card
-            className="max-w-sm"
-            imgAlt="Meaningful alt text for an image that is not purely decorative"
-            imgSrc={item.Picture.PictureUrl1}
-          >
-            <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-              {item.ScenicSpotName}
-            </h5>
-            <p className="font-normal text-gray-700 dark:text-gray-400">
-              {item.Description}
-            </p>
-            <Button>
-              Read more
-              <svg className="-mr-1 ml-2 h-4 w-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                <path
-                  fillRule="evenodd"
-                  d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </Button>
-          </Card>
-          )}
-        </div>
-      </div>
-      <div class="container mx-auto">
-         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-          { items.map(item => 
-            <CustomCard item={item} />   
+      
+      <div className="container mx-auto">
+         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          { items.map((item, index) => 
+            <CustomCard item={item} key={index}/>   
           )}
         </div>
       </div>
