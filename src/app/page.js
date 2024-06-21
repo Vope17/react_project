@@ -90,7 +90,7 @@ export default function Home() {
 
       
       <div className="container mx-auto">
-         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+         <div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-4">
           { items.map((item, index) => 
             <CustomCard item={item} key={index}/>   
           )}
